@@ -1,0 +1,9 @@
+{
+  "name": "10bis",
+  "version": "1.0.0",
+  "author": "Orel Eliyahu",
+  "dependencies": {
+    "moment": "^2.29.2",
+    "puppeteer": "^13.5.1"
+  }
+}
