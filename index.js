@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const cookieParser = require('./cookie-parser');
 const moment = require('moment');
+const path = require('path');
 
 (async () => {
   const browser = await puppeteer.launch({ headless: true });
@@ -27,7 +28,7 @@ const moment = require('moment');
     await page.waitForNavigation({ waitUntil: 'load' })
   }
 
-  await page.screenshot({ path: `${moment().format('DD.MM.YYYY')}.png` }, { fullPage: true });
+  await page.screenshot({ path: `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png` }, { fullPage: true });
   await browser.close();
 })();
 
