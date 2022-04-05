@@ -4,6 +4,7 @@
   "author": "Orel Eliyahu",
   "dependencies": {
     "moment": "^2.29.2",
-    "puppeteer": "^13.5.1"
+    "puppeteer": "^13.5.1",
+    "winston": "^3.7.2"
   }
 }
