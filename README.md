@@ -2,7 +2,7 @@
 
 This script helps to order shufersal voucher automatically
 
-## prerequisite
+## Prerequisite
 - node.js installed
 - linux based operation system (for [crontab](https://man7.org/linux/man-pages/man5/crontab.5.html))
 
