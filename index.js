@@ -35,6 +35,7 @@ const logger = require('./logger');
     logger.info('try to click submit order (charge)')
     await clickOnButton(page, '[data-test-id="checkoutSubmitOrderBtn"]')
     await page.waitForNavigation({ waitUntil: 'load' })
+    await page.waitForTimeout(5000)
   }
 
   logger.info('taking screenshot...')
