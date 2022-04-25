@@ -16,4 +16,14 @@ First you need to extract the cookie value from 10bis site:
 - create file named `cookie` in project folder and paste cookie value from first step
 - update crontab file (for example: `0 12 * * * node npm CHARGE=1 {project_folder}/10bis-shufersal-automation/index`)
 
+## Mailer
+
+You can configure mailer to send an email with all the generated vouchers
+
+- create `.env` file that includes this variables:
+  - `TENBIS_COUPONS_EMAIL` gmail email
+  - `TENBIS_COUPONS_PASS` gmail email password
+  - `RECIPIENTS` email recipients seperated by comma
+- update crontab file (for example: `0 12 * 1 * node npm {project_folder}/10bis-shufersal-automation/mailer`)
+
 enjoy!
