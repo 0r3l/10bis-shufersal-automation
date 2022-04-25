@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "author": "Orel Eliyahu",
   "dependencies": {
+    "archiver": "^5.3.1",
+    "dotenv": "^16.0.0",
     "moment": "^2.29.2",
+    "nodemailer": "^6.7.3",
     "puppeteer": "^13.5.1",
     "winston": "^3.7.2"
   }

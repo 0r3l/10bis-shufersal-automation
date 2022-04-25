@@ -2,3 +2,7 @@ node_modules
 cookie
 vouchers
 *.log
+email.json
+archive
+*.zip
+.env
