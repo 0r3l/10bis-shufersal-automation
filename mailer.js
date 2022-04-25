@@ -76,4 +76,8 @@ const sendEmail = async (email, subject, text) => {
   }
 }
 
-sendEmail('orelel7@gmail.com', 'testing 123', 'woohoo!');
+sendEmail(
+  process.env.RECIPIENTS.split(','),
+  'קופוני תן ביס',
+  'הקופונים מצורפים למייל'
+);
