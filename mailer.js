@@ -3,6 +3,10 @@ const process = require('process')
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
+moment.locale('he');
+require('dotenv').config();
+
+const lasMonthStr = moment().add(-1, 'month').format('MMMM Y');
 
 const getCouponsPath = () => fs.readdirSync(path.join(__dirname, 'vouchers')).map(filename => ({
   path: path.join(__dirname, 'vouchers', filename),
@@ -10,7 +14,6 @@ const getCouponsPath = () => fs.readdirSync(path.join(__dirname, 'vouchers')).ma
 }))
 
 const archiveCoupons = () => {
-  const lasMonthStr = moment().add(-1, 'month').format('MMMM-Y');
   const archiver = require('archiver');
 
   var output = fs.createWriteStream(`${lasMonthStr}.zip`);
@@ -36,14 +39,13 @@ const archiveCoupons = () => {
 
 const sendEmail = async (email, subject, text) => {
   try {
-
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
       auth: {
-        user: process.env.USER,
-        pass: process.env.PASS
+        user: process.env.TENBIS_COUPONS_EMAIL,
+        pass: process.env.TENBIS_COUPONS_PASS
       }
     });
 
@@ -78,6 +80,6 @@ const sendEmail = async (email, subject, text) => {
 
 sendEmail(
   process.env.RECIPIENTS.split(','),
-  'קופוני תן ביס',
+  `קופוני תן ביס לחודש ${lasMonthStr}`,
   'הקופונים מצורפים למייל'
 );
