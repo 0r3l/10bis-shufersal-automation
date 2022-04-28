@@ -6,7 +6,10 @@ const logger = require('./logger');
 
 (async () => {
   logger.info('job started...')
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
   const page = await browser.newPage();
   const cookie = await cookieParser
   await page.setCookie(...cookie)
