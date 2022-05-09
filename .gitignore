@@ -6,3 +6,4 @@ email.json
 archive
 *.zip
 .env
+firebase-adminsdk.json

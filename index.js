@@ -3,6 +3,7 @@ const cookieParser = require('./cookie-parser');
 const moment = require('moment');
 const path = require('path');
 const logger = require('./logger');
+const { storage } = require('./firebase-integration');
 
 (async () => {
   logger.info('job started...')
@@ -42,8 +43,12 @@ const logger = require('./logger');
   }
 
   logger.info('taking screenshot...')
-  await page.screenshot({ path: `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png` }, { fullPage: true });
+  const screenshotFilePath = `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png`;
+  await page.screenshot({ path: screenshotFilePath}, { fullPage: true });
   await browser.close();
+
+  await storage.uploadFile(screenshotFilePath)
+
 })();
 
 async function clickOnButton(page, selector) {
