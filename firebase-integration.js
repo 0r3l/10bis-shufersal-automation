@@ -2,6 +2,7 @@ const { initializeApp, cert } = require('firebase-admin/app');
 const serviceAccount = require("./firebase-adminsdk.json");
 const { getStorage } = require('firebase-admin/storage');
 const { getFirestore } = require('firebase-admin/firestore');
+const { getMessaging } = require('firebase-admin/messaging');
 require('dotenv').config();
 
 const BUCKET_NAME = 'bis-shufersal-coupons';
@@ -23,6 +24,7 @@ async function uploadFile(filePath) {
 
   console.log(`${filePath} uploaded to ${BUCKET_NAME}`);
   await insertDB(filename);
+  await sendFCM();
 }
 
 
@@ -36,6 +38,16 @@ async function insertDB(name) {
     name
   })
 
+}
+
+async function sendFCM() {
+  const messaging = getMessaging();
+  return messaging.sendToTopic(process.env.GROUP_FAMILY_ID, {
+    notification: {
+      title: "10BS",
+      body: 'שובר חדש'
+    },
+  })
 }
 
 
