@@ -24,7 +24,7 @@ async function uploadFile(filePath) {
 
   console.log(`${filePath} uploaded to ${BUCKET_NAME}`);
   await insertDB(filename);
-  await sendFCM();
+  await sendFCM(filename.substr(0, filename.lastIndexOf('.')));
 }
 
 
@@ -40,12 +40,12 @@ async function insertDB(name) {
 
 }
 
-async function sendFCM() {
+async function sendFCM(filename) {
   const messaging = getMessaging();
   return messaging.sendToTopic(process.env.GROUP_FAMILY_ID, {
     notification: {
-      title: "10BS",
-      body: 'שובר חדש'
+      title: "שובר שופרסל חדש",
+      body: filename
     },
   })
 }
