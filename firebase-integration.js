@@ -14,7 +14,11 @@ initializeApp({
   databaseURL: 'https://bis-shufersal-coupons.firebaseio.com'
 });
 
-
+/**
+ *
+ * @param {string} filePath
+ * @param {string} barcodeNumber
+ */
 async function uploadFile(filePath, barcodeNumber) {
 
   const filename = filePath.substr(filePath.lastIndexOf('/') + 1);
@@ -29,7 +33,11 @@ async function uploadFile(filePath, barcodeNumber) {
 }
 
 
-
+/**
+ *
+ * @param {string} name
+ * @param {string} barcodeNumber
+ */
 async function insertDB(name, barcodeNumber) {
   const db = getFirestore();
   const collection = `families/${process.env.GROUP_FAMILY_ID}/coupons`;
@@ -47,6 +55,11 @@ async function insertDB(name, barcodeNumber) {
 
 }
 
+/**
+ *
+ * @param {string} filename
+ * @returns Promise<MessagingTopicResponse>
+ */
 async function sendFCM(filename) {
   const messaging = getMessaging();
   return messaging.sendToTopic(process.env.GROUP_FAMILY_ID, {

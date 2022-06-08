@@ -1,6 +1,12 @@
 const https = require('https');
 const fs = require('fs');
 
+/**
+ *
+ * @param {string} url
+ * @param {string} path
+ * @returns Promise<void>
+ */
 function fileDownload(url, path) {
   return new Promise((resolve) => {
     const file = fs.createWriteStream(path);

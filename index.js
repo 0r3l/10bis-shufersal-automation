@@ -51,13 +51,18 @@ const { fileDownload } = require('./file-download');
 
 })();
 
+/**
+ *
+ * @param { puppeteer.Page } page
+ * @param { string } filePath
+ */
 async function saveOnlyBarcode(page, filePath) {
   logger.info('starting to save barcode...');
   const barcodeImageSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeImg"]');
   const bracodeUrl = barcodeImageSelector.style.backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
   logger.info(`barcode url: ${bracodeUrl}`)
   const barcodeNumberSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeNumber"]');
-  const barcodeNumber = await page.$eval(barcodeNumberSelector, el => el.textContent);
+  const barcodeNumber = await page.$eval(barcodeNumberSelector, el => el.innerHTML);
   logger.info(`barcode number: ${barcodeNumber}`)
   await fileDownload(bracodeUrl, filePath);
   logger.info(`file ${filePath} download completed`)
@@ -65,6 +70,11 @@ async function saveOnlyBarcode(page, filePath) {
 
 }
 
+/**
+ *
+ * @param { puppeteer.Page } page
+ * @param { puppeteer.ElementHandle<Element> } selector
+ */
 async function clickOnButton(page, selector) {
   try {
     await page.waitForSelector(selector, { timeout: 5000 })
