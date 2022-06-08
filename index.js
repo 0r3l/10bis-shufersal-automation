@@ -43,22 +43,16 @@ const { fileDownload } = require('./file-download');
     await page.waitForTimeout(5000)
   }
 
-  logger.info('taking screenshot...')
-  const screenshotFilePath = `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png`;
-
-  // save and upload screenshot
-  // await page.screenshot({ path: resultFilePath() }, { fullPage: true });
-  // await storage.uploadFile(screenshotFilePath)
-
   // save and upload barcode image & barcode number
-  await saveOnlyBarcode(page, screenshotFilePath)
+  const voucherFilePath = `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png`;
+  await saveOnlyBarcode(page, voucherFilePath)
 
   await browser.close();
 
 })();
 
 async function saveOnlyBarcode(page, filePath) {
-
+  logger.info('starting to save barcode...');
   const barcodeImageSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeImg"]');
   const bracodeUrl = barcodeImageSelector.style.backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
   logger.info(`barcode url: ${bracodeUrl}`)
