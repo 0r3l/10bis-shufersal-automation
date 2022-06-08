@@ -4,6 +4,7 @@ const moment = require('moment');
 const path = require('path');
 const logger = require('./logger');
 const { storage } = require('./firebase-integration');
+const { fileDownload } = require('./file-download');
 
 (async () => {
   logger.info('job started...')
@@ -44,12 +45,31 @@ const { storage } = require('./firebase-integration');
 
   logger.info('taking screenshot...')
   const screenshotFilePath = `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png`;
-  await page.screenshot({ path: screenshotFilePath}, { fullPage: true });
+
+  // save and upload screenshot
+  // await page.screenshot({ path: resultFilePath() }, { fullPage: true });
+  // await storage.uploadFile(screenshotFilePath)
+
+  // save and upload barcode image & barcode number
+  await saveOnlyBarcode(page, screenshotFilePath)
+
   await browser.close();
 
-  await storage.uploadFile(screenshotFilePath)
-
 })();
+
+async function saveOnlyBarcode(page, filePath) {
+
+  const barcodeImageSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeImg"]');
+  const bracodeUrl = barcodeImageSelector.style.backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
+  logger.info(`barcode url: ${bracodeUrl}`)
+  const barcodeNumberSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeNumber"]');
+  const barcodeNumber = await page.$eval(barcodeNumberSelector, el => el.textContent);
+  logger.info(`barcode number: ${barcodeNumber}`)
+  await fileDownload(bracodeUrl, filePath);
+  logger.info(`file ${filePath} download completed`)
+  await storage.uploadFile(filePath, barcodeNumber)
+
+}
 
 async function clickOnButton(page, selector) {
   try {

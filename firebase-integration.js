@@ -3,6 +3,7 @@ const serviceAccount = require("./firebase-adminsdk.json");
 const { getStorage } = require('firebase-admin/storage');
 const { getFirestore } = require('firebase-admin/firestore');
 const { getMessaging } = require('firebase-admin/messaging');
+const logger = require('./logger');
 require('dotenv').config();
 
 const BUCKET_NAME = 'bis-shufersal-coupons';
@@ -14,7 +15,7 @@ initializeApp({
 });
 
 
-async function uploadFile(filePath) {
+async function uploadFile(filePath, barcodeNumber) {
 
   const filename = filePath.substr(filePath.lastIndexOf('/') + 1);
   const bucket = getStorage().bucket();
@@ -22,21 +23,27 @@ async function uploadFile(filePath) {
     destination: filename,
   });
 
-  console.log(`${filePath} uploaded to ${BUCKET_NAME}`);
-  await insertDB(filename);
+  logger.info(`${filePath} uploaded to ${BUCKET_NAME}`);
+  await insertDB(filename, barcodeNumber);
   await sendFCM(filename.substr(0, filename.lastIndexOf('.')));
 }
 
 
 
-async function insertDB(name) {
+async function insertDB(name, barcodeNumber) {
   const db = getFirestore();
-  const docRef = db.collection(`families/${process.env.GROUP_FAMILY_ID}/coupons`)
+  const collection = `families/${process.env.GROUP_FAMILY_ID}/coupons`;
+  const docRef = db.collection(collection)
     .doc();
 
-  await docRef.set({
-    name
-  })
+  const doc = {
+    name,
+    barcodeNumber
+  }
+
+  await docRef.set(doc)
+
+  logger.info(`${JSON.stringify(doc)} saved to firebase collection ${collection}`);
 
 }
 
