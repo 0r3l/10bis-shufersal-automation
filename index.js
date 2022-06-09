@@ -7,47 +7,51 @@ const { storage } = require('./firebase-integration');
 const { fileDownload } = require('./file-download');
 
 (async () => {
-  logger.info('job started...')
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-  const page = await browser.newPage();
-  const cookie = await cookieParser
-  await page.setCookie(...cookie)
+  try {
+    logger.info('job started...')
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    const page = await browser.newPage();
+    const cookie = await cookieParser
+    await page.setCookie(...cookie)
 
-  logger.info('loading 10bis shufersal page')
-  await page.goto('https://www.10bis.co.il/next/restaurants/menu/delivery/26698/%D7%A9%D7%95%D7%A4%D7%A8%D7%A1%D7%9C---%D7%9B%D7%9C%D7%9C-%D7%90%D7%A8%D7%A6%D7%99', { waitUntil: 'load' });
+    logger.info('loading 10bis shufersal page')
+    await page.goto('https://www.10bis.co.il/next/restaurants/menu/delivery/26698/%D7%A9%D7%95%D7%A4%D7%A8%D7%A1%D7%9C---%D7%9B%D7%9C%D7%9C-%D7%90%D7%A8%D7%A6%D7%99', { waitUntil: 'load' });
 
-  logger.info('try to close address suggestion popup')
-  // close address suggestion popup
-  await clickOnButton(page, '#walkme-visual-design-a1590b69-75d8-da98-3b09-1e0ec4cad755 > button')
+    logger.info('try to close address suggestion popup')
+    // close address suggestion popup
+    await clickOnButton(page, '#walkme-visual-design-a1590b69-75d8-da98-3b09-1e0ec4cad755 > button')
 
-  logger.info('try to close feedback popup')
-  // close feedback popup
-  await clickOnButton(page, '[data-test-id="modalCloseButton"]')
+    logger.info('try to close feedback popup')
+    // close feedback popup
+    await clickOnButton(page, '[data-test-id="modalCloseButton"]')
 
-  logger.info('try to click 40 shekels voucher')
-  //click 40 shekels voucher
-  await clickOnButton(page, '[src="https://d25t2285lxl5rf.cloudfront.net/images/dishes/1898118.jpg"]')
+    logger.info('try to click 40 shekels voucher')
+    //click 40 shekels voucher
+    await clickOnButton(page, '[src="https://d25t2285lxl5rf.cloudfront.net/images/dishes/1898118.jpg"]')
 
-  logger.info('try to click proceed to checkout button')
-  // click proceed to checkout button
-  await clickOnButton(page, '[data-test-id="proceedToCheckoutBtn"]')
+    logger.info('try to click proceed to checkout button')
+    // click proceed to checkout button
+    await clickOnButton(page, '[data-test-id="proceedToCheckoutBtn"]')
 
-  // click submit order - this will charge if CHARGE env var is set to truthy value!
-  if (process.env.CHARGE) {
-    logger.info('try to click submit order (charge)')
-    await clickOnButton(page, '[data-test-id="checkoutSubmitOrderBtn"]')
-    await page.waitForNavigation({ waitUntil: 'load' })
-    await page.waitForTimeout(5000)
+    // click submit order - this will charge if CHARGE env var is set to truthy value!
+    if (process.env.CHARGE) {
+      logger.info('try to click submit order (charge)')
+      await clickOnButton(page, '[data-test-id="checkoutSubmitOrderBtn"]')
+      await page.waitForNavigation({ waitUntil: 'load' })
+      await page.waitForTimeout(5000)
+    }
+
+    // save and upload barcode image & barcode number
+    const voucherFilePath = `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png`;
+    await saveOnlyBarcode(page, voucherFilePath)
+
+    await browser.close();
+  } catch (e) {
+    logger.error(`${e} ${e.message} ${e.stack}`);
   }
-
-  // save and upload barcode image & barcode number
-  const voucherFilePath = `${path.resolve(__dirname)}/vouchers/${moment().format('DD.MM.YYYY')}.png`;
-  await saveOnlyBarcode(page, voucherFilePath)
-
-  await browser.close();
 
 })();
 
@@ -59,7 +63,8 @@ const { fileDownload } = require('./file-download');
 async function saveOnlyBarcode(page, filePath) {
   logger.info('starting to save barcode...');
   const barcodeImageSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeImg"]');
-  const bracodeUrl = barcodeImageSelector.style.backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
+  const backgroundImage = await page.evaluate(el => window.getComputedStyle(el).backgroundImage, barcodeImageSelector);
+  const bracodeUrl = backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
   logger.info(`barcode url: ${bracodeUrl}`)
   const barcodeNumberSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeNumber"]');
   const barcodeNumber = await page.$eval(barcodeNumberSelector, el => el.innerHTML);
