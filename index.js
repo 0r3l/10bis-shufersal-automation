@@ -67,7 +67,7 @@ async function saveOnlyBarcode(page, filePath) {
   const bracodeUrl = backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
   logger.info(`barcode url: ${bracodeUrl}`)
   const barcodeNumberSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeNumber"]');
-  const barcodeNumber = await page.$eval(barcodeNumberSelector, el => el.innerHTML);
+  const barcodeNumber = await page.evaluate(el => el.textContent, barcodeNumberSelector);
   logger.info(`barcode number: ${barcodeNumber}`)
   await fileDownload(bracodeUrl, filePath);
   logger.info(`file ${filePath} download completed`)
