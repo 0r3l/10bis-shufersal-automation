@@ -5,12 +5,13 @@ const path = require('path');
 const logger = require('./logger');
 const { storage } = require('./firebase-integration');
 const { fileDownload } = require('./file-download');
+require('dotenv').config();
 
 (async () => {
   try {
     logger.info('job started...')
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: process.env.HEADLESS_CHROME || false,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
