@@ -10,7 +10,7 @@ const { fileDownload } = require('./file-download');
   try {
     logger.info('job started...')
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
@@ -87,5 +87,6 @@ async function clickOnButton(page, selector) {
     await button.click({ delay: 1000 })
   } catch (e) {
     logger.error(`button click failed for selector ${selector}`)
+    logger.error(e, e?.stack)
   }
 }
