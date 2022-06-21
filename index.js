@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const cookieParser = require('./cookie-parser');
 const moment = require('moment');
+const process = require('process');
 const path = require('path');
 const logger = require('./logger');
 const { storage } = require('./firebase-integration');
