@@ -10,14 +10,15 @@ require('dotenv').config();
 
 (async () => {
   try {
-    logger.info('disable page navigation timoeut...')
-    await page.setDefaultNavigationTimeout(0);
+
     logger.info('job started...')
     const browser = await puppeteer.launch({
       headless: process.env.HEADLESS_CHROME || false,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
+    logger.info('disable page navigation timoeut...')
+    await page.setDefaultNavigationTimeout(0);
     const cookie = await cookieParser
     await page.setCookie(...cookie)
 
