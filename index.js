@@ -25,13 +25,13 @@ require('dotenv').config();
     logger.info('loading 10bis shufersal page')
     await page.goto('https://www.10bis.co.il/next/restaurants/menu/delivery/26698/%D7%A9%D7%95%D7%A4%D7%A8%D7%A1%D7%9C---%D7%9B%D7%9C%D7%9C-%D7%90%D7%A8%D7%A6%D7%99', { waitUntil: 'load' });
 
-    logger.info('try to close address suggestion popup')
+    logger.info('try to close address suggestion popup', 10_000)
     // close address suggestion popup
     await clickOnButton(page, '#walkme-visual-design-a1590b69-75d8-da98-3b09-1e0ec4cad755 > button')
 
     logger.info('try to close feedback popup')
     // close feedback popup
-    await clickOnButton(page, '[data-test-id="modalCloseButton"]')
+    await clickOnButton(page, '[data-test-id="modalCloseButton"]', 10_000)
 
     logger.info('try to click 40 shekels voucher')
     //click 40 shekels voucher
@@ -85,9 +85,9 @@ async function saveOnlyBarcode(page, filePath) {
  * @param { puppeteer.Page } page
  * @param { puppeteer.ElementHandle<Element> } selector
  */
-async function clickOnButton(page, selector) {
+async function clickOnButton(page, selector, timeout) {
   try {
-    await page.waitForSelector(selector, { timeout: 0 })
+    await page.waitForSelector(selector, { timeout: timeout || 0 })
     const button = await page.$(selector)
     await button.click({ delay: 1000 })
   } catch (e) {
