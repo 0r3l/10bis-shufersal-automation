@@ -87,7 +87,7 @@ async function saveOnlyBarcode(page, filePath) {
  */
 async function clickOnButton(page, selector) {
   try {
-    await page.waitForSelector(selector, { timeout: 5000 })
+    await page.waitForSelector(selector, { timeout: 0 })
     const button = await page.$(selector)
     await button.click({ delay: 1000 })
   } catch (e) {
