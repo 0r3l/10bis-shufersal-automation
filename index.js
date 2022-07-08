@@ -23,7 +23,7 @@ require('dotenv').config();
     await page.setCookie(...cookie)
 
     logger.info('loading 10bis shufersal page')
-    await page.goto('https://www.10bis.co.il/next/restaurants/menu/delivery/26698/%D7%A9%D7%95%D7%A4%D7%A8%D7%A1%D7%9C---%D7%9B%D7%9C%D7%9C-%D7%90%D7%A8%D7%A6%D7%99', { waitUntil: 'load' });
+    await page.goto('https://www.10bis.co.il/next/restaurants/menu/delivery/26698/%D7%A9%D7%95%D7%A4%D7%A8%D7%A1%D7%9C---%D7%9B%D7%9C%D7%9C-%D7%90%D7%A8%D7%A6%D7%99');
 
     logger.info('try to close address suggestion popup', 10_000)
     // close address suggestion popup

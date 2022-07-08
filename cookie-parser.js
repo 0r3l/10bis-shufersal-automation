@@ -12,7 +12,7 @@ function parse() {
       secure: true,
       path: '/',
       domain: 'www.10bis.co.il',
-      expires: 1688412410000 //Mon Jul 03 2023 22:26:50 GMT+0300
+      expires: 1688412410 //Mon Jul 03 2023 22:26:50 GMT+0300
     });
   });
   // console.log(JSON.stringify(output, null, 4))
