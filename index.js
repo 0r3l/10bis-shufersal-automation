@@ -45,8 +45,6 @@ require('dotenv').config();
     if (process.env.CHARGE) {
       logger.info('try to click submit order (charge)')
       await clickOnButton(page, '[data-test-id="checkoutSubmitOrderBtn"]')
-      await page.waitForNavigation({ waitUntil: 'load' })
-      await page.waitForTimeout(5000)
     }
 
     // save and upload barcode image & barcode number
@@ -66,8 +64,13 @@ require('dotenv').config();
  * @param { string } filePath
  */
 async function saveOnlyBarcode(page, filePath) {
+
+  const barcodeImageSelectorText = '[class*="CouponBarCodeComponent__BarCodeImg"]';
+  logger.info('waiting for bracode image selector...');
+  await page.waitForSelector(barcodeImageSelectorText, { timeout: 0 });
+
   logger.info('starting to save barcode...');
-  const barcodeImageSelector = await page.$('[class*="CouponBarCodeComponent__BarCodeImg"]');
+  const barcodeImageSelector = await page.$(barcodeImageSelectorText);
   const backgroundImage = await page.evaluate(el => window.getComputedStyle(el).backgroundImage, barcodeImageSelector);
   const bracodeUrl = backgroundImage.replace(/url\(\"/, "").replace(/\"\)/, "");
   logger.info(`barcode url: ${bracodeUrl}`)
