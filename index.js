@@ -39,7 +39,8 @@ require('dotenv').config();
 
     logger.info('try to click proceed to checkout button')
     // click proceed to checkout button
-    await clickOnButton(page, '[data-test-id="proceedToCheckoutBtn"]')
+    await clickOnButton(page, 'button[data-test-id="proceedToCheckoutBtn"]')
+    await clickOnButton(page, 'button[data-test-id="proceedToCheckoutBtn"]')
 
     // click submit order - this will charge if CHARGE env var is set to truthy value!
     if (process.env.CHARGE) {
